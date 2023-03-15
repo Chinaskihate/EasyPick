@@ -1,0 +1,1 @@
+# Here frontend applications will be located
