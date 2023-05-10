@@ -1,0 +1,86 @@
+// Бэк отправляет это в очередь.
+{
+    // GUID строка.
+    "RequestId": "55ba15f8-7985-451b-bf24-fbb7d71459f3",
+    // Одно из: Carry, Midlaner, Offlaner, SemiSupport, FullSupport
+    "HeroPosition": "Midlaner",
+    // Забаненные героев
+    "Bans": [
+        {
+            "HeroId": 1
+        },
+        {
+            "HeroId": 2
+        },
+        {
+            "HeroId": 100
+        }
+    ],
+    // Пики сил света
+    "RadiantPicks": [
+        {
+            "HeroId": 3
+        },
+        {
+            "HeroId": 120
+        },
+        {
+            "HeroId": 10
+        }
+    ],
+    // Пики сил тьмы
+    "DirePicks": [
+        {
+            "HeroId": 18
+        },
+        {
+            "HeroId": 44
+        },
+        {
+            "HeroId": 56
+        }
+    ]
+}
+
+// Модель отправляет это в очередь
+{
+    // GUID строка.
+    "RequestId": "55ba15f8-7985-451b-bf24-fbb7d71459f3",
+    // Рекомендации для сил света - весь список отсортированных герое
+    "RadiantRecommendations": [
+        {
+            "HeroId": 26,
+            "WinProbability": 0.66
+        },
+        {
+            "HeroId": 45,
+            "WinProbability": 0.64
+        },
+        {
+            "HeroId": 36,
+            "WinProbability": 0.60
+        },
+        {
+            "HeroId": 21,
+            "WinProbability": 0.8
+        }
+    ],
+    "DireRecommendations": [
+        {
+            "HeroId": 27,
+            "WinProbability": 0.16
+        },
+        {
+            "HeroId": 42,
+            "WinProbability": 0.24
+        },
+        {
+            "HeroId": 91,
+            "WinProbability": 0.9
+        },
+        {
+            "HeroId": 88,
+            "WinProbability": 0.8
+        }
+    ]
+}
