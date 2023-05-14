@@ -7,16 +7,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["PickPrediction.WebApp/PickPrediction.WebApp.csproj", "PickPrediction.WebApp/"]
-RUN dotnet restore "PickPrediction.WebApp/PickPrediction.WebApp.csproj"
+COPY ["DraftPrediction.WebApp/DraftPrediction.WebApp.csproj", "DraftPrediction.WebApp/"]
+RUN dotnet restore "DraftPrediction.WebApp/DraftPrediction.WebApp.csproj"
 COPY . .
-WORKDIR "/src/PickPrediction.WebApp"
-RUN dotnet build "PickPrediction.WebApp.csproj" -c Release -o /app/build
+WORKDIR "/src/DraftPrediction.WebApp"
+RUN dotnet build "DraftPrediction.WebApp.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "PickPrediction.WebApp.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "DraftPrediction.WebApp.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "PickPrediction.WebApp.dll"]
+ENTRYPOINT ["dotnet", "DraftPrediction.WebApp.dll"]

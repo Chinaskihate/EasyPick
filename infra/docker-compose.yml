@@ -1,4 +1,11 @@
+version: '3.4'
+
 services:
+  prediction-webapp:
+    image: ${DOCKER_REGISTRY-}prediction-webapp
+    build:
+      context: ../src/backend
+      dockerfile: Cloud/DraftPrediction/Dockerfile
   rabbitmq:
     image: rabbitmq:3-management
     hostname: rabbitmq
@@ -10,45 +17,3 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
-
-  postgres:
-    command: postgres -c listen_addresses='*'
-    image: postgres
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      PGDATA: /data/postgres
-    volumes:
-      - postgres:/data/postgres
-    ports:
-      - "5433:5432"
-    networks:
-      - postgres
-    restart: unless-stopped
-
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    volumes:
-      - pgadmin:/var/lib/pgadmin
-
-    ports:
-      - "${PGADMIN_PORT:-5050}:80"
-    networks:
-      - postgres
-    restart: unless-stopped
-  matchparser:
-    image: matchparser
-    build: ../src/backend/MatchParser.Service
-    depends_on: [ postgres ]
-
-networks:
-  postgres:
-    driver: bridge
-
-volumes:
-  postgres:
-  pgadmin:

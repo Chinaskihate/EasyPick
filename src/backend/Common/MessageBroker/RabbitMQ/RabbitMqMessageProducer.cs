@@ -1,13 +1,17 @@
 ﻿using System.Text;
 using MessageBroker.Common;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 
 namespace MessageBroker.RabbitMQ;
 
 public class RabbitMqMessageProducer<T> : IMessageProducer<T>
 {
-    public RabbitMqMessageProducer()
+    private readonly ILogger<IMessageProducer<T>> _logger;
+
+    public RabbitMqMessageProducer(ILogger<IMessageProducer<T>> logger)
     {
+        _logger = logger;
     }
 
     public Task SendAsync(T message)
@@ -27,9 +31,9 @@ public class RabbitMqMessageProducer<T> : IMessageProducer<T>
             routingKey: "hello",
             basicProperties: null,
             body: body);
-        Console.WriteLine($" [x] Sent {message}");
+        _logger.LogInformation($" [x] Sent {message}");
 
-        Console.WriteLine(" Press [enter] to exit.");
+        _logger.LogInformation(" Press [enter] to exit.");
         return Task.CompletedTask;
     }
 }

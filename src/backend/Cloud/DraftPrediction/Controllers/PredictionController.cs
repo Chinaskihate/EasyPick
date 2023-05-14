@@ -1,35 +1,26 @@
-using DraftPrediction.Contract.Entities;
 using DraftPrediction.Contract.Entities.DataTransferObjects;
 using DraftPrediction.Contract.Entities.DataTransferObjects.Drafts;
-using DraftPrediction.Contract.Entities.Drafts;
-using MessageBroker.Common;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DraftPrediction.WebApp.Controllers;
+namespace DraftPrediction.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class PredictionController : ControllerBase
 {
-    private readonly IMessageProducer<Draft> _producer;
 
-    public PredictionController(IMessageProducer<Draft> producer)
+    public PredictionController()
     {
-        _producer = producer;
     }
 
-    [HttpPost]
-    public async Task<ActionResult<Guid>> Predict([FromBody] PredictRequest request)
+    [HttpPost(Name = "Predict")]
+    public ActionResult<Guid> Predict([FromBody] PredictRequest request)
     {
-        _producer.SendAsync(new Draft()
-        {
-            Hero = new Hero() {HeroId = 1}
-        });
-        return Ok(Guid.NewGuid());
+        return Guid.NewGuid();
     }
 
-    [HttpGet("{id:guid}")]
-    public async Task<ActionResult<GetPredictionResponse>> GetPrediction(Guid id)
+    [HttpGet(Name = "Predict/{id:guid}")]
+    public ActionResult Get(Guid id)
     {
         return Ok(new GetPredictionResponse()
         {
@@ -74,7 +65,7 @@ public class PredictionController : ControllerBase
                     Order = 3
                 }
             },
-            Bans = Enumerable.Range(70,90).Select(x => new BanDto()
+            Bans = Enumerable.Range(70, 90).Select(x => new BanDto()
             {
                 HeroId = x
             }).ToList()
