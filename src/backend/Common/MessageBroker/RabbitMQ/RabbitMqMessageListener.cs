@@ -60,7 +60,7 @@ public class RabbitMqMessageListener<T> : IHostedService, IMessageListener<T>
             {
                 _func(entity).Wait(CancellationToken.None);
                 _logger.LogInformation("Got message: " + content);
-                _channel.BasicAck(ea.DeliveryTag, false);
+                _channel.BasicAck(ea.DeliveryTag, multiple: true);
             }
             catch (Exception ex)
             {
