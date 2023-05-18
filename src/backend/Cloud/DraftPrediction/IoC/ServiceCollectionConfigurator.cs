@@ -33,10 +33,10 @@ public class ServiceCollectionConfigurator
                 typeof(PredictionMappingProfile));
 
         services
-            .AddTransient<IMessageConsumer<PredictDraftDto>, RabbitMqMessageConsumer<PredictDraftDto>>(p =>
-                new RabbitMqMessageConsumer<PredictDraftDto>(
+            .AddTransient<IMessageConsumer<RecommendationsDto>, RabbitMqMessageConsumer<RecommendationsDto>>(p =>
+                new RabbitMqMessageConsumer<RecommendationsDto>(
                     settings.PredictionConsumer,
-                    p.GetRequiredService<ILogger<IMessageConsumer<PredictDraftDto>>>()))
+                    p.GetRequiredService<ILogger<IMessageConsumer<RecommendationsDto>>>()))
             .AddTransient<IMessageProducer<PredictDraftDto>, RabbitMqMessageProducer<PredictDraftDto>>(p => 
                 new RabbitMqMessageProducer<PredictDraftDto>(
                     settings.PredictionProducer,
@@ -47,7 +47,7 @@ public class ServiceCollectionConfigurator
             .AddSingleton<ITaskManager<IDistributionTask>>(p =>
             {
                 var task = new PredictionProcessingDistributionTask(
-                    p.GetRequiredService<IMessageConsumer<PredictDraftDto>>(),
+                    p.GetRequiredService<IMessageConsumer<RecommendationsDto>>(),
                     p.GetRequiredService<IDraftPredictionStorage>(),
                     p.GetRequiredService<IMapper>(),
                     p.GetRequiredService<ILogger<IDistributionTask>>());

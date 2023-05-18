@@ -9,13 +9,13 @@ namespace DraftPrediction.Contract.Application.Processing;
 
 public class PredictionProcessingDistributionTask : IDistributionTask
 {
-    private readonly IMessageConsumer<RecommendedDraftDto> _consumer;
+    private readonly IMessageConsumer<RecommendationsDto> _consumer;
     private readonly IDraftPredictionStorage _storage;
     private readonly IMapper _mapper;
     private readonly ILogger<IDistributionTask> _logger;
 
     public PredictionProcessingDistributionTask(
-        IMessageConsumer<RecommendedDraftDto> consumer,
+        IMessageConsumer<RecommendationsDto> consumer,
         IDraftPredictionStorage storage,
         IMapper mapper,
         ILogger<IDistributionTask> logger)

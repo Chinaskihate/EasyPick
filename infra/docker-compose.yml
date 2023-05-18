@@ -8,6 +8,15 @@ services:
       dockerfile: Cloud/DraftPrediction/Dockerfile
     depends_on:
       - rabbitmq
+  model-proxy-webapp:
+    image: ${DOCKER_REGISTRY-}model-proxy-webapp
+    build:
+      context: ../src/backend
+      dockerfile: Cloud/ModelPredictionRedirector/Dockerfile
+    ports:
+      - 8000:8000
+    depends_on:
+      - rabbitmq
   rabbitmq:
     image: rabbitmq:3-management
     hostname: rabbitmq
