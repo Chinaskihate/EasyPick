@@ -1,9 +1,9 @@
-// Бэк отправляет это в очередь.
+// Модель получает это от сервера(GET)
 {
     // GUID строка.
     "RequestId": "55ba15f8-7985-451b-bf24-fbb7d71459f3",
-    // Одно из: Carry, Midlaner, Offlaner, SemiSupport, FullSupport
-    "HeroPosition": "Midlaner",
+    // Одно из: Carry, MidLaner, OffLaner, SemiSupport, FullSupport
+    "RecommendedPosition": "Midlaner",
     // Забаненные героев
     "Bans": [
         {
@@ -41,8 +41,7 @@
         }
     ]
 }
-
-// Модель отправляет это в очередь
+// Модель отправляет это в сервер(POST)
 {
     // GUID строка.
     "RequestId": "55ba15f8-7985-451b-bf24-fbb7d71459f3",

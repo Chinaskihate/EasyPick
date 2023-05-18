@@ -1,4 +1,4 @@
-﻿namespace DraftPrediction.Contract.Entities.Drafts;
+﻿namespace DraftPrediction.Contract.Models.Drafts;
 
 public class Draft
 {

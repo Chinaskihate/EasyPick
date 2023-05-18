@@ -6,6 +6,8 @@ services:
     build:
       context: ../src/backend
       dockerfile: Cloud/DraftPrediction/Dockerfile
+    depends_on:
+      - rabbitmq
   rabbitmq:
     image: rabbitmq:3-management
     hostname: rabbitmq

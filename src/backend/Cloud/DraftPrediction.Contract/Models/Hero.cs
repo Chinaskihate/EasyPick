@@ -1,4 +1,4 @@
-﻿namespace DraftPrediction.Contract.Entities;
+﻿namespace DraftPrediction.Contract.Models;
 
 public class Hero
 {

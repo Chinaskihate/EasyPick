@@ -1,25 +1,27 @@
+using DraftPrediction.IoC;
+using DraftPrediction.Settings;
+
 var builder = WebApplication.CreateBuilder(args);
+var settings = DraftPredictionServiceSettingsReader.ReadSettings(builder.Configuration);
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+ServiceCollectionConfigurator.Configure(builder.Services, settings);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+ConfigureApplication(app, app.Environment);
+
+app.Run();
+
+void ConfigureApplication(IApplicationBuilder app, IWebHostEnvironment env)
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    app.UseRouting();
+    app.UseAuthorization();
+    app.UseCors(settings.CorsPolicyName);
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers();
+    });
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();

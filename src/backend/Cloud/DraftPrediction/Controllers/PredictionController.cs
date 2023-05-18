@@ -1,5 +1,6 @@
-using DraftPrediction.Contract.Entities.DataTransferObjects;
-using DraftPrediction.Contract.Entities.DataTransferObjects.Drafts;
+using AutoMapper;
+using DraftPrediction.Contract.Application;
+using DraftPrediction.Contract.Models.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DraftPrediction.Controllers;
@@ -8,67 +9,31 @@ namespace DraftPrediction.Controllers;
 [Route("api/[controller]")]
 public class PredictionController : ControllerBase
 {
+    private readonly IPredictionProvider _provider;
+    private readonly IPredictionManager _manager;
+    private readonly IMapper _mapper;
 
-    public PredictionController()
+    public PredictionController(
+        IPredictionProvider provider,
+        IPredictionManager manager,
+        IMapper mapper)
     {
+        _provider = provider;
+        _manager = manager;
+        _mapper = mapper;
     }
 
     [HttpPost(Name = "Predict")]
-    public ActionResult<Guid> Predict([FromBody] PredictRequest request)
+    public async Task<ActionResult<Guid>> Predict([FromBody] PredictRequest request)
     {
-        return Guid.NewGuid();
+        var info = _mapper.Map<PredictRequest, PredictInfo>(request);
+        return Ok(await _manager.Predict(info, CancellationToken.None));
     }
 
     [HttpGet(Name = "Predict/{id:guid}")]
-    public ActionResult Get(Guid id)
+    public async Task<ActionResult<GetPredictionResponse>> Get(Guid id)
     {
-        return Ok(new GetPredictionResponse()
-        {
-            RadiantPicks = new List<PickDto>()
-            {
-                new PickDto()
-                {
-                    HeroId = 1,
-                    Order = 0
-                },
-                new PickDto()
-                {
-                    HeroId = 2,
-                    Order = 1
-                },
-                new PickDto()
-                {
-                    HeroId = 3,
-                    Order = 2
-                }
-            },
-            DirePicks = new List<PickDto>()
-            {
-                new PickDto()
-                {
-                    HeroId = 10,
-                    Order = 0
-                },
-                new PickDto()
-                {
-                    HeroId = 11,
-                    Order = 1
-                },
-                new PickDto()
-                {
-                    HeroId = 12,
-                    Order = 2
-                },
-                new PickDto()
-                {
-                    HeroId = 13,
-                    Order = 3
-                }
-            },
-            Bans = Enumerable.Range(70, 90).Select(x => new BanDto()
-            {
-                HeroId = x
-            }).ToList()
-        });
+        var prediction = await _provider.GetPredictionAsync(id, CancellationToken.None);
+        return Ok(_mapper.Map<GetPredictionResponse>(prediction));
     }
 }
