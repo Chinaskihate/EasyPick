@@ -56,9 +56,16 @@ public class RabbitMqMessageListener<T> : IHostedService, IMessageListener<T>
         {
             var content = Encoding.UTF8.GetString(ea.Body.ToArray());
             var entity = JsonSerializer.Deserialize<T>(content);
-            _func(entity).Wait(CancellationToken.None);
-            _logger.LogInformation("Got message: " + content);
-            _channel.BasicAck(ea.DeliveryTag, false);
+            try
+            {
+                _func(entity).Wait(CancellationToken.None);
+                _logger.LogInformation("Got message: " + content);
+                _channel.BasicAck(ea.DeliveryTag, false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
         };
 
         _channel.BasicConsume(_settings.QueueName, false, consumer);
