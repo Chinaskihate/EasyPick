@@ -57,7 +57,7 @@ public class PredictionMappingProfile : Profile
             .ForMember(p => p.Hero,
                 o => o.MapFrom(dto => new Hero()
                 {
-                    HeroId = dto.HeroId
+                    HeroId = dto.HeroId ?? 100
                 }))
             .ReverseMap()
             .ForMember(dto => dto.HeroId,

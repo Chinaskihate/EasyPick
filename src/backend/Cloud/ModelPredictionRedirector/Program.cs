@@ -7,6 +7,21 @@ using ModelPredictionRedirector.Settings;
 var builder = WebApplication.CreateBuilder(args);
 
 var settings = ModelPredictionRedirectorServiceSettingsReader.ReadSettings(builder.Configuration);
+//var settings = new ModelPredictionRedirectorServiceSettings()
+//{
+//    RedirectorConsumer = new RabbitMqConnectionSettings()
+//    {
+//        HostName = "rabbitmq",
+//        Port = 5672,
+//        QueueName = "PredictionResponses"
+//    },
+//    RedirectorProducer = new RabbitMqConnectionSettings()
+//    {
+//        HostName = "rabbitmq",
+//        Port = 5672,
+//        QueueName = "PredictRequests"
+//    }
+//};
 
 var producerSettings = settings.RedirectorProducer;
 var consumerSettings = settings.RedirectorConsumer;

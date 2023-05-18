@@ -24,4 +24,8 @@
     <Folder Include="Settings\Configs\" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
+
 </Project>

@@ -2,5 +2,5 @@
 
 public class DraftDto
 {
-    public int HeroId { get; set; }
+    public int? HeroId { get; set; }
 }

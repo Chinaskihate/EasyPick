@@ -3,14 +3,14 @@ version: '3.4'
 services:
   prediction-webapp:
     image: ${DOCKER_REGISTRY-}prediction-webapp
-    # restart: on-failure
+    restart: on-failure
     build:
       context: ../src/backend
       dockerfile: Cloud/DraftPrediction/Dockerfile
-    # depends_on:
-    #   - rabbitmq
-    # links:
-    #   - rabbitmq
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
 
   model-proxy-webapp:
     image: ${DOCKER_REGISTRY-}model-proxy-webapp

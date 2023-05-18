@@ -1,4 +1,5 @@
 using DraftPrediction.Contract.Models.DataTransferObjects;
+using DraftPrediction.Contract.Models.DataTransferObjects.Drafts;
 using MessageBroker.Common;
 using Microsoft.AspNetCore.Mvc;
 using ModelPredictionRedirector.Services;
@@ -30,7 +31,24 @@ public class QueueRedirectController : ControllerBase
     [HttpGet(Name = "GetPredictions")]
     public async Task<ActionResult<List<PredictDraftDto>>> GetFromQueue()
     {
-        var requests = _storage.PopRequests();
+        var requests = _storage.PopRequests().ToList();
+        for (int i = 0; i < requests.Count; i++)
+        {
+            while (requests[i].RadiantPicks.Count < 5)
+            {
+                requests[i].RadiantPicks.Add(new DraftDto()
+                {
+                    HeroId = null,
+                });
+            }
+            while (requests[i].DirePicks.Count < 5)
+            {
+                requests[i].DirePicks.Add(new DraftDto()
+                {
+                    HeroId = null,
+                });
+            }
+        }
         return Ok(requests.ToList());
         //return Ok(new List<PredictDraftDto>()
         //{

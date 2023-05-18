@@ -13,10 +13,10 @@ WORKDIR "/src/Cloud/ModelPredictionRedirector"
 RUN dotnet build "ModelPredictionRedirector.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "ModelPredictionRedirector.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "ModelPredictionRedirector.csproj" -c Release -o /app/ModelPredictionRedirector/publish /p:UseAppHost=false
 
 FROM base AS final
-WORKDIR /app
+WORKDIR /app/ModelPredictionRedirector
 ENV ASPNETCORE_URLS=http://+:8000
-COPY --from=publish /app/publish .
+COPY --from=publish /app/ModelPredictionRedirector/publish .
 ENTRYPOINT ["dotnet", "ModelPredictionRedirector.dll"]
