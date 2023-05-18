@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Application\Processing\" />
     <Folder Include="Mappings\" />
   </ItemGroup>
 

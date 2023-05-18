@@ -3,13 +3,18 @@ version: '3.4'
 services:
   prediction-webapp:
     image: ${DOCKER_REGISTRY-}prediction-webapp
+    # restart: on-failure
     build:
       context: ../src/backend
       dockerfile: Cloud/DraftPrediction/Dockerfile
-    depends_on:
-      - rabbitmq
+    # depends_on:
+    #   - rabbitmq
+    # links:
+    #   - rabbitmq
+
   model-proxy-webapp:
     image: ${DOCKER_REGISTRY-}model-proxy-webapp
+    restart: on-failure
     build:
       context: ../src/backend
       dockerfile: Cloud/ModelPredictionRedirector/Dockerfile
@@ -17,10 +22,17 @@ services:
       - 8000:8000
     depends_on:
       - rabbitmq
+    links:
+      - rabbitmq
   rabbitmq:
     image: rabbitmq:3-management
     hostname: rabbitmq
     restart: always
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:15672" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     environment:
       - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit disk_free_limit 2147483648
     volumes:

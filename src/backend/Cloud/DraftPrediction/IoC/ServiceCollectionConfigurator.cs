@@ -1,7 +1,4 @@
-﻿using AutoMapper;
-using Common.Tasks;
-using DraftPrediction.Contract.Application.Processing;
-using DraftPrediction.Contract.Application;
+﻿using DraftPrediction.Contract.Application;
 using DraftPrediction.Contract.Mappings;
 using DraftPrediction.Contract.Models.DataTransferObjects;
 using DraftPrediction.Contract.Storage;
@@ -33,27 +30,19 @@ public class ServiceCollectionConfigurator
                 typeof(PredictionMappingProfile));
 
         services
-            .AddTransient<IMessageConsumer<RecommendationsDto>, RabbitMqMessageConsumer<RecommendationsDto>>(p =>
-                new RabbitMqMessageConsumer<RecommendationsDto>(
+            .AddHostedService<RabbitMqMessageListener<RecommendationsDto>>(p =>
+                new RabbitMqMessageListener<RecommendationsDto>(
+                    (dto) =>
+                        p.GetRequiredService<IDraftPredictionStorage>()
+                            .UpdateAsync(dto, CancellationToken.None),
                     settings.PredictionConsumer,
-                    p.GetRequiredService<ILogger<IMessageConsumer<RecommendationsDto>>>()))
+                    p.GetRequiredService<ILogger<IMessageListener<RecommendationsDto>>>()))
             .AddTransient<IMessageProducer<PredictDraftDto>, RabbitMqMessageProducer<PredictDraftDto>>(p => 
                 new RabbitMqMessageProducer<PredictDraftDto>(
                     settings.PredictionProducer,
                     p.GetRequiredService<ILogger<IMessageProducer<PredictDraftDto>>>()))
             .AddSingleton<IDraftPredictionStorage, DraftPredictionStorage>()
             .AddTransient<IPredictionProvider, PredictionProvider>()
-            .AddTransient<IPredictionManager, PredictionManager>()
-            .AddSingleton<ITaskManager<IDistributionTask>>(p =>
-            {
-                var task = new PredictionProcessingDistributionTask(
-                    p.GetRequiredService<IMessageConsumer<RecommendationsDto>>(),
-                    p.GetRequiredService<IDraftPredictionStorage>(),
-                    p.GetRequiredService<IMapper>(),
-                    p.GetRequiredService<ILogger<IDistributionTask>>());
-                return new DefaultTaskManager<IDistributionTask>(
-                    task,
-                    p.GetRequiredService<ILogger<ITaskManager<IDistributionTask>>>());
-            });
+            .AddTransient<IPredictionManager, PredictionManager>();
     }
 }

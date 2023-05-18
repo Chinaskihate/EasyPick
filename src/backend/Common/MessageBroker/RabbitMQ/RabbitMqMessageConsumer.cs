@@ -8,10 +8,11 @@ using RabbitMQ.Client.Events;
 
 namespace MessageBroker.RabbitMQ;
 
-public class RabbitMqMessageConsumer<T> : IMessageConsumer<T>
+public class RabbitMqMessageConsumer<T> : IMessageConsumer<T>, IDisposable
 {
     private readonly RabbitMqConnectionSettings _settings;
     private readonly ILogger<IMessageConsumer<T>> _logger;
+    private readonly IConnection _connection;
 
     public RabbitMqMessageConsumer(
         RabbitMqConnectionSettings settings,
@@ -19,13 +20,13 @@ public class RabbitMqMessageConsumer<T> : IMessageConsumer<T>
     {
         _settings = settings;
         _logger = logger;
+        var factory = new ConnectionFactory { HostName = _settings.HostName, Port = _settings.Port };
+        _connection = factory.CreateConnection();
     }
 
     public Task ExecuteAsync(Func<T, Task> func, CancellationToken ct)
     {
-        var factory = new ConnectionFactory { HostName = _settings.HostName, Port = _settings.Port};
-        using var connection = factory.CreateConnection();
-        using var channel = connection.CreateModel();
+        using var channel = _connection.CreateModel();
 
         channel.QueueDeclare(queue: _settings.QueueName,
             durable: false,
@@ -47,5 +48,10 @@ public class RabbitMqMessageConsumer<T> : IMessageConsumer<T>
             consumer: consumer);
 
         return Task.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        _connection.Dispose();
     }
 }

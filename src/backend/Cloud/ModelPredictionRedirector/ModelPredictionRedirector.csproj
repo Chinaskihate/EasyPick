@@ -16,6 +16,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Common\MessageBroker\MessageBroker.csproj" />
     <ProjectReference Include="..\DraftPrediction.Contract\DraftPrediction.Contract.csproj" />
+    <ProjectReference Include="..\DraftPrediction\DraftPrediction.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Settings\Configs\" />
+    <Folder Include="Settings\Entities\" />
   </ItemGroup>
 
 </Project>
